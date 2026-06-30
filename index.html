@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hyacinthe — AI Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0D1117;
+    --bg-elevated: #131A22;
+    --border: #21262D;
+    --text: #C9D1D9;
+    --text-dim: #6E7681;
+    --blue: #58A6FF;
+    --green: #7EE787;
+    --orange: #F0883E;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  ::selection { background: var(--blue); color: var(--bg); }
+
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 3px;
+  }
+
+  /* ---------- Layout shells ---------- */
+  .wrap {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---------- Nav ---------- */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(13, 17, 23, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  nav .wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 64px;
+  }
+  .logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo .dot { color: var(--green); }
+  .navlinks { display: flex; gap: 28px; }
+  .navlinks a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    transition: color .15s;
+  }
+  .navlinks a:hover { color: var(--blue); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    padding: 96px 0 72px;
+    border-bottom: 1px solid var(--border);
+  }
+  .terminal-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--green);
+    border: 1px solid var(--border);
+    background: var(--bg-elevated);
+    padding: 6px 12px;
+    border-radius: 4px;
+    margin-bottom: 28px;
+  }
+  .terminal-tag .blink {
+    width: 7px; height: 7px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: blink 1.6s infinite;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+  h1 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: clamp(34px, 5.5vw, 56px);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: #fff;
+    max-width: 14ch;
+  }
+  h1 .accent { color: var(--blue); }
+
+  .hero-sub {
+    margin-top: 24px;
+    font-size: 18px;
+    color: var(--text-dim);
+    max-width: 56ch;
+  }
+  .hero-sub strong { color: var(--text); font-weight: 600; }
+
+  .hero-cta {
+    margin-top: 36px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px 22px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: transform .15s, background .15s, border-color .15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-primary {
+    background: var(--blue);
+    color: #051018;
+  }
+  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-ghost {
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+
+  /* ---------- Section shared ---------- */
+  section { padding: 72px 0; border-bottom: 1px solid var(--border); }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--blue);
+    margin-bottom: 12px;
+    display: block;
+  }
+  h2 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(22px, 3vw, 30px);
+    color: #fff;
+    margin-bottom: 36px;
+    letter-spacing: -0.01em;
+  }
+
+  /* ---------- Pipeline (signature element) ---------- */
+  .pipeline {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 32px 28px;
+    overflow-x: auto;
+  }
+  .pipeline-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    min-width: 640px;
+  }
+  .pipe-node {
+    flex: 1;
+    text-align: center;
+    padding: 16px 10px;
+    position: relative;
+  }
+  .pipe-node .icon {
+    width: 38px; height: 38px;
+    margin: 0 auto 10px;
+    border-radius: 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    color: var(--green);
+    transition: border-color .2s, transform .2s;
+  }
+  .pipe-node:hover .icon {
+    border-color: var(--green);
+    transform: translateY(-3px);
+  }
+  .pipe-node .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .pipe-node .sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+  .pipe-arrow {
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    padding: 0 4px;
+    flex-shrink: 0;
+  }
+
+  /* ---------- Projects ---------- */
+  .project-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-elevated);
+    padding: 28px;
+    margin-bottom: 20px;
+    transition: border-color .2s;
+  }
+  .project-card:hover { border-color: var(--blue); }
+  .project-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .project-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .status-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    border: 1px solid var(--green);
+    padding: 3px 9px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+  .project-desc { color: var(--text-dim); font-size: 15px; margin-bottom: 18px; }
+  .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--orange);
+    background: rgba(240, 136, 62, 0.1);
+    padding: 4px 9px;
+    border-radius: 4px;
+  }
+  .project-links { display: flex; gap: 18px; }
+  .project-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--blue);
+    text-decoration: none;
+  }
+  .project-links a:hover { text-decoration: underline; }
+
+  /* ---------- Skills ---------- */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+  }
+  .skill-group .skill-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--green);
+    margin-bottom: 12px;
+  }
+  .skill-group ul { list-style: none; }
+  .skill-group li {
+    font-size: 14.5px;
+    color: var(--text-dim);
+    padding: 5px 0;
+    border-bottom: 1px dashed var(--border);
+  }
+
+  /* ---------- Services ---------- */
+  .service-row {
+    display: flex;
+    gap: 20px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: baseline;
+  }
+  .service-row:last-child { border-bottom: none; }
+  .service-num {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-dim);
+    font-size: 13px;
+    width: 28px;
+    flex-shrink: 0;
+  }
+  .service-name { font-weight: 600; color: #fff; font-size: 16px; margin-bottom: 4px; }
+  .service-desc { color: var(--text-dim); font-size: 14.5px; }
+
+  /* ---------- Contact ---------- */
+  .contact { text-align: center; border-bottom: none; }
+  .contact h2 { margin-bottom: 16px; }
+  .contact p { color: var(--text-dim); max-width: 48ch; margin: 0 auto 32px; font-size: 16px; }
+
+  footer {
+    padding: 28px 0;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--text-dim);
+  }
+
+  @media (max-width: 640px) {
+    .navlinks { display: none; }
+    .hero { padding: 64px 0 48px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="#" class="logo">~/<span class="dot">hyacinthe</span></a>
+    <div class="navlinks">
+      <a href="#projects">projects</a>
+      <a href="#skills">skills</a>
+      <a href="#services">services</a>
+      <a href="#contact">contact</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="terminal-tag"><span class="blink"></span>available for freelance projects</div>
+    <h1>I build <span class="accent">AI</span> applications that actually work.</h1>
+    <p class="hero-sub">I'm <strong>Hyacinthe</strong>, an AI Engineer specialized in <strong>RAG</strong> systems, LLM integration, and intelligent automation. I turn pre-trained models into usable products.</p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">View projects →</a>
+      <a href="#contact" class="btn btn-ghost">Get in touch</a>
+    </div>
+  </div>
+</header>
+
+<section id="pipeline-section">
+  <div class="wrap">
+    <span class="eyebrow">// how I work</span>
+    <h2>From document to answer</h2>
+    <div class="pipeline">
+      <div class="pipeline-row">
+        <div class="pipe-node">
+          <div class="icon">📄</div>
+          <div class="label">Ingest</div>
+          <div class="sub">PDF, docs</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-node">
+          <div class="icon">✂</div>
+          <div class="label">Chunk</div>
+          <div class="sub">split text</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-node">
+          <div class="icon">⚬</div>
+          <div class="label">Embed</div>
+          <div class="sub">vectors</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-node">
+          <div class="icon">⌕</div>
+          <div class="label">Retrieve</div>
+          <div class="sub">semantic search</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-node">
+          <div class="icon">✦</div>
+          <div class="label">Generate</div>
+          <div class="sub">LLM answer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <span class="eyebrow">// projects</span>
+    <h2>What I've built</h2>
+
+    <div class="project-card">
+      <div class="project-head">
+        <span class="project-title">RAG PDF Chatbot</span>
+        <span class="status-tag">● live</span>
+      </div>
+      <p class="project-desc">An application that lets you upload a PDF document and ask questions about it in natural language. Full RAG pipeline: text extraction, chunking, embedding, semantic retrieval, and answer generation with GPT-4.</p>
+      <div class="tag-row">
+        <span class="tag">LangChain</span>
+        <span class="tag">OpenAI</span>
+        <span class="tag">ChromaDB</span>
+        <span class="tag">Streamlit</span>
+        <span class="tag">Python</span>
+      </div>
+      <div class="project-links">
+        <a href="#" target="_blank">→ Live demo</a>
+        <a href="#" target="_blank">→ Source code</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <span class="eyebrow">// stack</span>
+    <h2>Technical skills</h2>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <div class="skill-title">LLM & RAG</div>
+        <ul>
+          <li>LangChain</li>
+          <li>OpenAI API</li>
+          <li>Prompt Engineering</li>
+          <li>Vector Databases (ChromaDB)</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <div class="skill-title">Development</div>
+        <ul>
+          <li>Python</li>
+          <li>FastAPI</li>
+          <li>Streamlit</li>
+          <li>Git & GitHub</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <div class="skill-title">Infrastructure</div>
+        <ul>
+          <li>Linux (Ubuntu)</li>
+          <li>Cloud Deployment</li>
+          <li>Virtual Environments</li>
+          <li>API Security</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="wrap">
+    <span class="eyebrow">// services</span>
+    <h2>How I can help</h2>
+
+    <div class="service-row">
+      <span class="service-num mono">01</span>
+      <div>
+        <div class="service-name">Chatbots for business documents</div>
+        <div class="service-desc">I turn your internal documents (manuals, contracts, FAQs) into an AI assistant you can query in plain language.</div>
+      </div>
+    </div>
+    <div class="service-row">
+      <span class="service-num mono">02</span>
+      <div>
+        <div class="service-name">LLM integration into existing applications</div>
+        <div class="service-desc">I add AI features (summarization, classification, data extraction) to your existing app or website.</div>
+      </div>
+    </div>
+    <div class="service-row">
+      <span class="service-num mono">03</span>
+      <div>
+        <div class="service-name">Process automation with AI</div>
+        <div class="service-desc">I build pipelines that automate repetitive tasks using language models.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="wrap">
+    <span class="eyebrow">// contact</span>
+    <h2>Let's talk about your project</h2>
+    <p>I'm available for freelance work and collaborations on AI projects. Reach out to discuss what you need.</p>
+    <div class="hero-cta" style="justify-content:center;">
+      <a href="mailto:hyacinthetchoula@gmailcom" class="btn btn-primary">Get in touch</a>
+      <a href="https://github.com/loubardozzor" target="_blank" class="btn btn-ghost">GitHub</a>
+      <a href="www.linkedin.com/in/hyacinthe-ghoyap-menji" target="_blank" class="btn btn-ghost">LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  built by Hyacinthe — Python, LangChain & a lot of coffee
+</footer>
+
+</body>
+</html>
